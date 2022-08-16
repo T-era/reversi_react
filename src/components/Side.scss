@@ -1,0 +1,25 @@
+div.side {
+  left: 480px;
+  width: 200px;
+  font-size: large;
+  button {
+    font-size: large;
+  }
+  .control {
+    button {
+      width: 50%;
+    }
+    padding: 1em;
+  }
+  .score {
+    padding: 1em;
+    table {
+      padding: 0 1em;
+      td {
+        text-align: right;
+        min-width: 2em;
+      }
+    }
+  }
+  .piyo { color: red; }
+}

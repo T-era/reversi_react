@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.scss';
+import Rev from './rev';
+
+import Cells from './components/Cells';
+import Side from './components/Side';
+
+const rev = new Rev();
 
 function App() {
+  const cells = Cells(rev);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <main>
+        <div className="field">
+          {cells}
+        </div>
+        <Side rev={rev} />
+      </main>
     </div>
   );
 }

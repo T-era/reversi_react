@@ -1,0 +1,40 @@
+.init_modal {
+  border-radius: 5px;
+  background-color: white;
+  margin: 1em;
+  padding: 0.5em;
+  dl {
+    margin: 1em;
+    dt {
+      font-size: large;
+    }
+    dd {
+      font-size: large;
+      select {
+        font-size: large;
+      }
+    }
+  }
+  .control {
+    height: 3em;
+    button {
+      font-size: large;
+      position: absolute;
+      width: 8em;
+      left: 0;
+      right: 0;
+      margin: 2px auto 2px auto;
+      height: inherit;
+    }
+  }
+  .init_settings {
+    position: relative;
+    .image {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 128px;
+      height: 128px;
+    }
+    }
+}

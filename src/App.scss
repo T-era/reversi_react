@@ -1,0 +1,17 @@
+main {
+  background-color: #023;
+  min-height: 100vh;
+  color: white;
+
+  display:flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  div.field {
+    padding: 20px;
+    display: block;
+    position: relative;
+    width: 480px;
+    height: 480px;
+  }
+}

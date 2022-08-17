@@ -69,7 +69,7 @@ export default function Initial(props :Props) {
                     </select>
                 </dd>
             </dl>
-            <img src={imageSrc} className='image'/>
+            <img src={imageSrc} className='image' alt='ToBe...'/>
         </>
     );
 }

@@ -3,7 +3,7 @@
 	 viewBox="0 0 80 80" style="enable-background:new 0 0 80 80;" xml:space="preserve">
 <style>
     svg {
-        background: rgba(0,0,0,0);
+        background: #080;
     }
     .black {
         fill: black;
@@ -13,6 +13,6 @@
     }
 </style>
 <g>
-	<circle cx="5" cy="5" r="4" class="white"/>
+	<circle cx="40" cy="40" r="38" class="white"/>
 </g>
 </svg>

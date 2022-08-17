@@ -1,31 +1,24 @@
-import { Pos, addPos, Stone, Listener, ALine, Directions } from './types';
+import { Pos, addPos, Stone, ALine, Directions } from './types';
 import Settings from './Settings';
 import { flatten } from '../ArrayUtil';
 
-interface Score {
+export interface Score {
     black :number,
     white :number
 }
 export default class Rev {
     stones :Stone[][];
-    // GUIに状況変化を伝えるためのリスナ
-    listeners :Listener[][];
-    nextPlayer :Stone.Black | Stone.White = Stone.White;
-    scoreListener :(s :Score) => void = () => {};
+    nextPlayer :Stone.Black | Stone.White = Stone.Black;
+    putting :Pos|null = null;
+    score :Score = { black: 0, white: 0 };
+    hintOn :boolean = true;
 
     constructor() {
         this.stones = ALine.map(
             () => ALine.map(
                 () => Stone.None));
-        this.listeners = ALine.map(
-            () => ALine.map(
-                () => function() {}));
-            }
-    setListenerAt(pos :Pos, listener :Listener) {
-        this.listeners[pos.y][pos.x] = listener;
     }
     initialize(settings: Settings) {
-        // いったん固定で白先
         this.nextPlayer = settings.starter;
         ALine.forEach((y) => {
             ALine.forEach((x) => {
@@ -42,19 +35,19 @@ export default class Rev {
             this._setStoneAt(pos, settings.handicap.for);
         });
 
-        this.readScore();
+        this._readScore();
     }
     setStoneAt(pos :Pos) {
         let stone = this.nextPlayer;
         this._setStoneAt(pos, stone);
-        let holded = this.findHolded(pos, stone);
+        let holded = this._findHolded(pos, stone);
         for (let hp of holded) {
             this._setStoneAt(hp, stone);
         }
-        this.readScore();
-        this.skipPlayer();
+        this._readScore();
+        this._changePlayer();
     }
-    private readScore() {
+    private _readScore() {
         let black = 0;
         let white = 0;
         ALine.forEach((y) => {
@@ -67,22 +60,21 @@ export default class Rev {
                 }
             });
         });
-        this.scoreListener({ black, white });
+        this.score = { black, white };
     };
     private _setStoneAt(pos :Pos, stone :Stone) {
         this.stones[pos.y][pos.x] = stone;
-        this.listeners[pos.y][pos.x](stone);
     }
     validateAt(pos :Pos) :boolean {
         if (this.stones[pos.y][pos.x] !== Stone.None) {
             return false;
         }
-        let holded = this.findHolded(pos, this.nextPlayer);
+        let holded = this._findHolded(pos, this.nextPlayer);
         // 挟んでいるかどうか？
         return holded.length > 0;
     }
     // 指定した位置に置いたときに、反転する石をリストで返す
-    private findHolded(pos :Pos, stone:Stone) :Pos[] {
+    private _findHolded(pos :Pos, stone:Stone) :Pos[] {
         const holdedByD = (direction :Pos) => {
             let res :Pos[] = [];
             let p = pos;
@@ -111,6 +103,9 @@ export default class Rev {
             || pos.y >= 8;
     }
     skipPlayer() {
+        this._changePlayer();
+    }
+    private _changePlayer() {
         switch (this.nextPlayer) {
             case Stone.White:
                 this.nextPlayer = Stone.Black;
@@ -119,9 +114,6 @@ export default class Rev {
                 this.nextPlayer = Stone.White;
                 return;
         }
-    }
-    setScoreListener(listener :(s :Score) => void) {
-        this.scoreListener = listener;
     }
 }
 

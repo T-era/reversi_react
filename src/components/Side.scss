@@ -21,5 +21,8 @@ div.side {
       }
     }
   }
-  .piyo { color: red; }
+  dl#next {
+    padding: 1em;
+    img.next_stone { width: 60px; height: 60px; }
+  }
 }

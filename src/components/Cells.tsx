@@ -1,54 +1,55 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import Rev, {Stone, ALine} from '../rev';
+import Rev, { Pos } from '../rev';
 import './Cells.scss'
+import Cell from './Cell';
 
-
-function Cells(rev :Rev) {
-    return ALine.map((y) => {
-        const line = CellLine(rev, y);
-        const id = `l_${y}`;
-        return <div className="CellLine" key={id}>{line}</div>
-    });
+interface CellsProps {
+    rev :Rev;
+    onPlayMoved: ()=>void;
 }
-function CellLine(rev :Rev, y :number) {
-    return ALine.map((x) => {
-        return Cell(rev, x, y);
-    });
-}
-function Cell(rev :Rev, x :number, y :number) {
-    const [{stone, additionalClass}, setState] = useState({ stone: Stone.None, additionalClass: '' });
-    const style = {
-        left: x * 60, top: y * 60
+function Cells(props :CellsProps) {
+    let [{selected}, setState] = useState({selected: null as Pos|null});
+    const cellesChanged = (selected :Pos|null) => {
+        setState({selected});
     };
-    rev.setListenerAt({x, y}, (stone) => {
-        setState((state) => { return { ...state, stone: stone }; });
-    });
-    const id = `c_${x}_${y}`;
-    const onMouseOver = () => {
-        if (rev.validateAt({x, y})) {
-            setState((state) => { return {...state, additionalClass: 'can ' + rev.nextPlayer }; });
-        }
-    };
-    const onMouseLeave = () => {
-        setState((state) => { return {...state, additionalClass: ''}});
-    }
-    const onClick = () => {
-        const pos = {x, y};
-        if (rev.validateAt(pos)) {
-            rev.setStoneAt(pos);
-            setState((state) => { return { ...state, additionalClass: ''}});
-        }
+    const playMoved = () => {
+        setState({selected: null});
+        props.onPlayMoved();
     }
     return (
-        <div
-            className={ `Cell ${stone} ${additionalClass}` }
-            style={style}
-            key={id}
-            onMouseOver={onMouseOver}
-            onMouseLeave={onMouseLeave}
-            onClick={onClick}>
-            <div className='stone' />
+        <>
+            <CellLine y={0} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={1} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={2} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={3} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={4} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={5} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={6} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <CellLine y={7} rev={props.rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+        </>
+    );
+}
+
+interface CellLineProps {
+    rev :Rev;
+    y :number;
+    selected :Pos|null;
+    cellesChanged :(pos :Pos|null)=>void;
+    playMoved :()=>void;
+}
+function CellLine(props :CellLineProps) {
+    let {rev, y, selected, cellesChanged, playMoved} = props;
+    return (
+        <div className="CellLine">
+            <Cell x={0} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={1} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={2} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={3} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={4} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={5} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={6} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
+            <Cell x={7} y={y} rev={rev} selected={selected} cellesChanged={cellesChanged} playMoved={playMoved} />
         </div>
     );
 }

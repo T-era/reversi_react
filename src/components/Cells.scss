@@ -1,9 +1,5 @@
 $gameboard_normal: #080;
 $gameboard_highlight: #4a4;
-$stone_black: black;
-$stone_black_maybe: #333;
-$stone_white: white;
-$stone_white_maybe: #ccc;
 
 .field {
   padding: 10px;
@@ -18,84 +14,9 @@ $stone_white_maybe: #ccc;
       background: $gameboard_normal;
       width: 58px;
       height: 58px;
-      &.white {
-        .stone {
-          background: $stone_white;
-        }
-      }
-      &.black {
-        .stone {
-          background: $stone_black;
-        }
-      }
-      &.reserved {
-        .stone {
-          animation-name: flashingAnime;
-          animation-duration:1s;
-          animation-fill-mode:forwards;
-          animation-iteration-count: infinite;
-          opacity:0;
-        }
-      }
-      &.can_white {
-        &:hover {
-          background: $gameboard_highlight;
-          .stone {
-            background: $stone_white_maybe;
-          }
-        }
-        &.reserved {
-          .stone {
-            background: $stone_white;
-          }
-        }
-        &.suggestion {
-          .stone {
-            width: 10px;
-            height: 10px;
-            background: $stone_white;
-          }
-        }
-      }
-      &.can_black {
-        &:hover {
-          background: $gameboard_highlight;
-          .stone {
-            background: $stone_black_maybe;
-          }
-        }
-        &.reserved {
-          .stone {
-            background: $stone_black;
-          }
-        }
-        &.suggestion {
-          .stone {
-            width: 10px;
-            height: 10px;
-            background: $stone_black;
-          }
-        }
-      }
-      .stone {
-        position: absolute;
-        left:0;right:0;top:0;bottom:0;
-        margin: auto;
-        width: 48px;
-        height: 48px;
-        border-radius: 24px;
-        background: rgba(0,0,0,0);
-      }
-    }
-    @keyframes flashingAnime {
-      from {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
+      @import './CellStone.scss';
+      &:hover {
+        background: $gameboard_highlight;
       }
     }
   }

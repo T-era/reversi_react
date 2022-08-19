@@ -7,13 +7,19 @@ interface CellProps {
     rev :Rev;
     x :number;
     y :number;
-    selected :Pos|null
+    selected :Pos|null;
+    turning :Pos[];
     cellesChanged :(pos :Pos|null)=>void;
     playMoved :()=>void;
 }
-function cssClass(canPut :boolean, selectedHere :boolean, stone :Stone, nextPlayer :Stone, hintOn :boolean) :String {
-    let elem :string[] = [];
-    if (stone !== null) elem.push(stone);
+function stoneCssClass(canPut :boolean, selectedHere :boolean, stone :Stone, nextPlayer :Stone, hintOn :boolean, isTurning :boolean) :string {
+    if (stone !== null && stone !== Stone.None) {
+        let ret = ['stone', `${stone}`];
+        if (isTurning) ret.push('truning');
+        return ret.join(' ');
+    }
+
+    let elem :string[] = ['stonable'];
     if (selectedHere) elem.push('reserved');
     if (canPut || selectedHere) {
         if (nextPlayer !== Stone.None) elem.push(`can_${nextPlayer}`);
@@ -24,7 +30,8 @@ function cssClass(canPut :boolean, selectedHere :boolean, stone :Stone, nextPlay
     return elem.join(' ');
 }
 function Cell(props :CellProps) {
-    let {rev, x, y, selected, cellesChanged, playMoved} = props;
+    let {rev, x, y, selected, turning, cellesChanged, playMoved} = props;
+    let isTurning = turning.some((p) => p.x == x && p.y == y);
     let stone = rev.stones[y][x];
     let canPut = rev.validateAt({x, y});
     const [{selectedHere}, setState] = useState({
@@ -54,23 +61,16 @@ function Cell(props :CellProps) {
                         selectedHere: true
                     });
                     cellesChanged(pos);
-                // } else {
-                //     // 選択状態をキャンセル
-                //     setState({
-                //         stone,
-                //         additionalClass: '',
-                //         selected: false
-                //     });
                 }
             }
         }
     }
     return (
         <div
-            className={`Cell ${cssClass(canPut, selectedHere, stone, rev.nextPlayer, rev.hintOn)}`}
+            className='Cell'
             style={style}
             onClick={onClick}>
-            <div className='stone' />
+            <div className={stoneCssClass(canPut, selectedHere, stone, rev.nextPlayer, rev.hintOn, isTurning)}/>
         </div>
     );
 }

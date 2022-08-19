@@ -73,6 +73,14 @@ export default class Rev {
         // 挟んでいるかどうか？
         return holded.length > 0;
     }
+    getHoldingTo(pos :Pos) :Pos[] {
+        if (this.stones[pos.y][pos.x] !== Stone.None) {
+            return [];
+        }
+        let holded = this._findHolded(pos, this.nextPlayer);
+        // 挟んでいる石のリスト？
+        return holded;
+    }
     // 指定した位置に置いたときに、反転する石をリストで返す
     private _findHolded(pos :Pos, stone:Stone) :Pos[] {
         const holdedByD = (direction :Pos) => {

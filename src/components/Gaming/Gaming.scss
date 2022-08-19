@@ -1,0 +1,12 @@
+.gaming {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    .main {
+        display: grid;
+        grid-template-rows: 500px 3em;
+    }
+    .score {
+        width: 100px;
+    }
+}

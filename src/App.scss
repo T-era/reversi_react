@@ -1,17 +1,14 @@
+body {
+  min-height: 100vh;
+}
+
 main {
   background-color: #023;
-  min-height: 100vh;
+  height: calc(100vh - 3em);
+  min-height: 500px;
   color: white;
 
   display:flex;
   justify-content: center;
   flex-wrap: wrap;
-
-  div.field {
-    padding: 20px;
-    display: block;
-    position: relative;
-    width: 480px;
-    height: 480px;
-  }
 }

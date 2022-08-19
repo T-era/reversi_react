@@ -30,7 +30,6 @@ function Cell(props :CellProps) {
     const [{selectedHere}, setState] = useState({
         selectedHere: false,
     });
-    console.log('Cell init ', selected);
     if (selectedHere
         && (selected === null
             || (selected.x !== x || selected.y !== y))) {
@@ -43,7 +42,6 @@ function Cell(props :CellProps) {
     };
     const onClick = () => {
         if (stone === Stone.None) {
-//            console.log('onclick', selectedHere);
             if (selectedHere) {
                 const pos = {x, y};
                 rev.setStoneAt(pos);

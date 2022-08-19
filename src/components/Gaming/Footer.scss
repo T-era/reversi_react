@@ -1,0 +1,20 @@
+.footer {
+    font-size: large;
+    display: grid;
+    grid-template-columns: .8fr .2fr;
+    .next {
+        display: grid;
+        grid-template-columns: .1fr .1fr;
+        margin: 0 10px;
+        img.next_stone {
+            height: 2em;
+        }
+        button {
+            height: 2.5em;
+        }
+    }
+    button {
+        margin: 0 10px;
+        height: 2.5em;
+    }
+}

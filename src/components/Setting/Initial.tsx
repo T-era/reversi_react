@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import { Stone } from '../../rev';
-import './InitModal.scss';
+//import './InitModal.scss';
 import image_standard from './img/initial_standard.svg';
 import image_parallel from './img/initial_parallel.svg';
 

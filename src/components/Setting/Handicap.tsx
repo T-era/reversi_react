@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import { Stone, Pos } from '../../rev';
-import './InitModal.scss';
+//import './InitModal.scss';
 import imageW1 from './img/handicap_w1.svg';
 import imageW2 from './img/handicap_w2.svg';
 import imageW4 from './img/handicap_w4.svg';

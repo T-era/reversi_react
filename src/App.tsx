@@ -1,59 +1,59 @@
 import './App.scss';
 import React, {useState} from 'react';
+
 import Rev from './rev';
 
-import Cells from './components/Cells';
-import Side from './components/Side';
+import Setting from './components/Setting';
+import Gaming from './components/Gaming';
+import Header from './components/Header';
+// import Side from './components/Side';
 
 const rev = new Rev();
 
 function App() {
-  let [{ score, nextPlayer, initialized }, setState] = useState({
-    score: rev.score,
-    nextPlayer: rev.nextPlayer,
+  let [{ isOnGaming, initialized }, setState] = useState({
+    isOnGaming: false,
     initialized: false,
   });
 
   const onNextPlayerChanging = () => {
     rev.skipPlayer();
     setState({
-      score,
+      isOnGaming,
       initialized,
-      nextPlayer: rev.nextPlayer
     });
   };
   const onScoreChanged = () => {
     setState({
-      score: rev.score,
+      isOnGaming,
       initialized,
-      nextPlayer: rev.nextPlayer
     });
-
-  }
+  };
   return (
     <div className="App">
       <header className="App-header">
+        <Header/>
       </header>
       <main>
-        <div className="field">
-          <Cells
-            rev={rev}
-            onPlayMoved={() => {
-              onScoreChanged();
-            }} />
-        </div>
-        <Side
-          rev={rev}
-          score={score}
-          nextPlayer={nextPlayer}
-          onNextPlayerChanging={onNextPlayerChanging}
-          onGameInitialized={()=>{
-            setState({
-              score: rev.score,
-              nextPlayer: rev.nextPlayer,
-              initialized: true
-            });
-          }} />
+        { isOnGaming
+          ? <Gaming
+              rev={rev}
+              onSuspended={()=>{
+                setState({
+                  isOnGaming: false,
+                  initialized,
+                });
+              }}/>
+          : <Setting
+              rev={rev}
+              initialized={initialized}
+              onClose={()=>{
+                setState({
+                  isOnGaming: true,
+                  initialized: true,
+                });
+              }}/>
+        }
       </main>
     </div>
   );

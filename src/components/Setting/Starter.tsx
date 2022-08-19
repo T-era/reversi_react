@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import { Stone } from '../../rev';
-import './InitModal.scss';
+//import './InitModal.scss';
 
 export type StarterValue = (Stone.Black|Stone.White);
 export interface Props {

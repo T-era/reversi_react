@@ -1,0 +1,43 @@
+.init {
+  color: black;
+  grid-template-rows: inherit inherit;
+  border-radius: 5px;
+  background-color: white;
+  margin: 1em;
+  padding: 0.5em;
+  .init_settings {
+    position: relative;
+    dl {
+      margin: 1em;
+      margin-right: 200px;
+      dt {
+        font-size: large;
+      }
+      dd {
+        font-size: large;
+        select {
+          font-size: large;
+        }
+      }
+    }
+    .image {
+      position: absolute;
+      top: 60px;
+      right: 10px;
+      width: 128px;
+      height: 128px;
+    }
+  }
+  .control {
+    margin-top: 4em;
+    .buttons {
+      display: flex;
+      margin: 0 auto;
+      button {
+        font-size: large;
+        width: 8em;
+        margin: 2px auto 2px auto;
+      }
+    }
+  }
+}

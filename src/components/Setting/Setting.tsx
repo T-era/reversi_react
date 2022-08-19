@@ -1,48 +1,47 @@
 import React, {useState} from 'react';
-import ReactModal from 'react-modal';
 
 import Rev, { Stone } from '../../rev';
-import './InitModal.scss';
+import './Setting.scss';
 
 import Starter,  { StarterValue } from './Starter';
 import Initial, { InitialSelection, initial_pattern } from './Initial';
 import Handicap, { HandicapSelection, handicap_pattern } from './Handicap';
 import HintOn from './HintOn';
 
-export interface InitModalProps {
-    isOpen: boolean;
+export interface SettingProps {
     rev :Rev;
-    onGameInitialized: ()=>void;
+    initialized :boolean;
+    onClose :()=>void;
 }
-export interface Setting {
+export interface SettingContents {
     starter :StarterValue;
     initial :InitialSelection;
     handicap :HandicapSelection;
     hintOn :boolean;
 }
-export default function InitModal(props :InitModalProps) {
-    let rev = props.rev;
-    ReactModal.setAppElement('#root');
+export default function Setting(props :SettingProps) {
+    let { rev, onClose } = props;
 
+    let [{ initialized }, setInitialized] = useState({
+        initialized: props.initialized
+    });
     let [state, setState] = useState({
         starter: Stone.Black,
         initial: 'standard',
         handicap: 'e0',
         hintOn: false
-    } as Setting);
-    const apply = (state :Setting) => {
+    } as SettingContents);
+    const apply = (state :SettingContents) => {
          rev.initialize({
             starter: state.starter,
             initial: initial_pattern[state.initial],
             handicap: handicap_pattern[state.handicap]
          });
+         setInitialized({ initialized: true });
          rev.hintOn = state.hintOn;
     }
     return (
-        <ReactModal
-            isOpen={props.isOpen}
-            contentLabel="Settings"
-            className='init_modal'>
+        <div className='init'>
             <div className='init_settings'>
                 <Starter value={state.starter as (Stone.Black|Stone.White)} onChange={(starter) => {
                     setState((state) => { return { ...state, starter}; });
@@ -58,11 +57,22 @@ export default function InitModal(props :InitModalProps) {
                 }} />
             </div>
             <div className="control">
-                <button onClick={() => {
-                    apply(state);
-                    props.onGameInitialized();
-                }}>Start!</button>
+                <div className='buttons'>
+                    <button onClick={() => {
+                        apply(state);
+                        onClose();
+                    }}>Start!</button>
+                    {initialized
+                        ? (
+                            <>
+                                <span>or</span>
+                                <button onClick={onClose}>Back to Game</button>
+                            </>
+                        )
+                        : null
+                    }
+                </div>
             </div>
-        </ReactModal>
+        </div>
     );
 }

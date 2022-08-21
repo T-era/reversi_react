@@ -1,3 +1,5 @@
+import { PlayerColor } from "./Rev";
+
 export enum Stone {
     None = 'none', Black = 'black', White = 'white'
 }
@@ -25,3 +27,9 @@ export const Directions :Pos[] = [
     { x: 0, y: 1 },
     { x: 0, y: -1 },
 ];
+
+export interface Turning {
+    putting :Pos;
+    turning :Pos[];
+    turningTo :PlayerColor;
+}

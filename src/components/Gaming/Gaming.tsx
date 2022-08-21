@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Rev, { Score, Stone } from '../../rev';
+import Rev, { requestThink, skipPlayer, Turning } from '../../rev';
+import { PlayMembers } from '../../algorithm';
 
 import ScoreBoard from './ScoreBoard';
 import Footer from './Footer';
@@ -8,14 +9,25 @@ import './Gaming.scss';
 
 interface Props {
   rev :Rev;
-  onSuspended :() => void;
+  players :PlayMembers;
+  onSuspended :(rev :Rev) => void;
 }
 function Gaming(props :Props) {
-  let { rev, onSuspended } = props;
-  let [{}, setState] = useState({});
+  let { onSuspended } = props;
+  let [{rev, turning}, setState] = useState({
+    rev: props.rev,
+    turning: null as Turning|null
+  });
 
-  const onPlayMoved = () => {
-    setState({});
+  // 次がAIの場合
+  setTimeout(() => {
+    requestThink(rev.nextPlayer, rev, (nextRev) => {
+      setState({ rev: nextRev, turning: null });
+    })
+  }, 0);
+
+  const onPlayMoved = (rev :Rev, turning :Turning|null) => {
+    setState({rev, turning});
   }
 
   return (
@@ -23,14 +35,15 @@ function Gaming(props :Props) {
       <div className='main'>
         <Cells
           rev={rev}
-          onPlayMoved={onPlayMoved} />
+          turning={turning}
+          onChanged={onPlayMoved} />
         <Footer
-          nextPlayer={rev.nextPlayer}
+          nextPlayer={rev.nextPlayer.color}
           onNextPlayerChanging={() => {
-            rev.skipPlayer();
-            setState({});
+            const nextRev = skipPlayer(rev);
+            setState({ rev: nextRev, turning: null });
           }}
-          onSuspended={onSuspended} />
+          onSuspended={() => onSuspended(rev)} />
       </div>
       <ScoreBoard score={rev.score}/>
     </div>

@@ -1,26 +1,36 @@
 import React, {useState} from 'react';
 
-import Rev, { Stone } from '../../rev';
+import { Stone, Settings } from '../../rev';
 import './Setting.scss';
 
 import Starter,  { StarterValue } from './Starter';
 import Initial, { InitialSelection, initial_pattern } from './Initial';
 import Handicap, { HandicapSelection, handicap_pattern } from './Handicap';
 import HintOn from './HintOn';
+import PlayerSelect, { playerCandidate } from './PlayerSelect';
+
+import { PlayMembers } from '../../algorithm';
 
 export interface SettingProps {
-    rev :Rev;
     initialized :boolean;
-    onClose :()=>void;
+    onClose :(newPlayMembers :PlayMembers|null)=>void;
+    onSettingsSubmitted :(settings :Settings)=>void;
 }
 export interface SettingContents {
     starter :StarterValue;
     initial :InitialSelection;
     handicap :HandicapSelection;
     hintOn :boolean;
+    playMembers :{black:string, white:string};
+}
+function aiFromSetting(setting :{black:string, white:string}) :PlayMembers {
+    return {
+        black: playerCandidate[setting.black],
+        white: playerCandidate[setting.white],
+    }
 }
 export default function Setting(props :SettingProps) {
-    let { rev, onClose } = props;
+    let { onClose, onSettingsSubmitted } = props;
 
     let [{ initialized }, setInitialized] = useState({
         initialized: props.initialized
@@ -29,16 +39,18 @@ export default function Setting(props :SettingProps) {
         starter: Stone.Black,
         initial: 'standard',
         handicap: 'e0',
-        hintOn: false
+        hintOn: false,
+        playMembers: { black: '人', white: '人' },
     } as SettingContents);
     const apply = (state :SettingContents) => {
-         rev.initialize({
+        onSettingsSubmitted({
             starter: state.starter,
             initial: initial_pattern[state.initial],
-            handicap: handicap_pattern[state.handicap]
+            handicap: handicap_pattern[state.handicap],
+            playMembers: aiFromSetting(state.playMembers),
+            hintOn: state.hintOn,
          });
          setInitialized({ initialized: true });
-         rev.hintOn = state.hintOn;
     }
     return (
         <div className='init'>
@@ -55,18 +67,42 @@ export default function Setting(props :SettingProps) {
                 <HintOn hintOn={state.hintOn} onChange={(hintOn) => {
                     setState((state) => { return { ...state, hintOn }; });
                 }} />
+                <PlayerSelect label='黒' selectedValue={state.playMembers.black} onChange={(aiBlack)=>{
+                    setState((state) => {
+                        let playMembers = {
+                            ...state.playMembers,
+                            black: aiBlack,
+                        }
+                        return { ...state, playMembers };
+                    });
+                }}/>
+                <PlayerSelect label='白' selectedValue={state.playMembers.white} onChange={(aiWhite)=>{
+                    setState((state) => {
+                        let playMembers = {
+                            ...state.playMembers,
+                            white: aiWhite,
+                        }
+                        return { ...state, playMembers };
+                    });
+                }}/>
             </div>
             <div className="control">
                 <div className='buttons'>
                     <button onClick={() => {
                         apply(state);
-                        onClose();
+                        let playmembersAI = {
+                            black: playerCandidate[state.playMembers.black],
+                            white: playerCandidate[state.playMembers.white],
+                        }
+                        onClose(playmembersAI);
                     }}>Start!</button>
                     {initialized
                         ? (
                             <>
                                 <span>or</span>
-                                <button onClick={onClose}>Back to Game</button>
+                                <button
+                                    onClick={() => onClose(null)}>Back to Game
+                                </button>
                             </>
                         )
                         : null

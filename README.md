@@ -1,5 +1,7 @@
 # React習作 リバーシ
 
+リバーシの対戦ゲーム。
+
 ## Available Scripts
 
 ### `npm start`

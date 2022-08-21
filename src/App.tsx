@@ -1,34 +1,22 @@
 import './App.scss';
 import React, {useState} from 'react';
 
-import Rev from './rev';
+import Rev, { initialize } from './rev';
+import { PlayMembers } from './algorithm';
 
 import Setting from './components/Setting';
 import Gaming from './components/Gaming';
 import Header from './components/Header';
-// import Side from './components/Side';
 
-const rev = new Rev();
 
 function App() {
-  let [{ isOnGaming, initialized }, setState] = useState({
+  let [{ isOnGaming, initialized, players }, setState] = useState({
     isOnGaming: false,
     initialized: false,
+    players: {black: null, white: null} as PlayMembers,
   });
+  let [rev, setRev] = useState(null as (Rev|null));
 
-  const onNextPlayerChanging = () => {
-    rev.skipPlayer();
-    setState({
-      isOnGaming,
-      initialized,
-    });
-  };
-  const onScoreChanged = () => {
-    setState({
-      isOnGaming,
-      initialized,
-    });
-  };
   return (
     <div className="App">
       <header className="App-header">
@@ -37,20 +25,28 @@ function App() {
       <main>
         { isOnGaming
           ? <Gaming
-              rev={rev}
-              onSuspended={()=>{
+              rev={rev!}
+              players={players}
+              onSuspended={(rev)=>{
                 setState({
                   isOnGaming: false,
                   initialized,
+                  players,
                 });
+                setRev(rev);
               }}/>
           : <Setting
-              rev={rev}
               initialized={initialized}
-              onClose={()=>{
+              onSettingsSubmitted={(settings)=>{
+                setRev(
+                  initialize(settings)
+                );
+              }}
+              onClose={(newPlayMembers)=>{
                 setState({
                   isOnGaming: true,
                   initialized: true,
+                  players: newPlayMembers === null ? players : newPlayMembers,
                 });
               }}/>
         }

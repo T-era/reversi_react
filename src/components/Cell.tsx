@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import Rev, { Stone, Pos } from '../rev';
+import Rev, { Stone, Turning, ensureCanPut, putStoneAt } from '../rev';
+import { findHolded } from '../rev/Rev';
 
 
 interface CellProps {
     rev :Rev;
+    turning :Turning|null;
+
     x :number;
     y :number;
-    selected :Pos|null;
-    turning :Pos[];
-    cellesChanged :(pos :Pos|null)=>void;
-    playMoved :()=>void;
+    onChanged :(rev :Rev, turning :Turning|null)=>void;
 }
 function stoneCssClass(canPut :boolean, selectedHere :boolean, stone :Stone, nextPlayer :Stone, hintOn :boolean, isTurning :boolean) :string {
     if (stone !== null && stone !== Stone.None) {
@@ -30,37 +30,31 @@ function stoneCssClass(canPut :boolean, selectedHere :boolean, stone :Stone, nex
     return elem.join(' ');
 }
 function Cell(props :CellProps) {
-    let {rev, x, y, selected, turning, cellesChanged, playMoved} = props;
-    let isTurning = turning.some((p) => p.x == x && p.y == y);
+    let {rev, turning, x, y, onChanged} = props;
+    let isTurning = turning !== null && turning.turning.some((p) => p.x == x && p.y == y);
     let stone = rev.stones[y][x];
-    let canPut = rev.validateAt({x, y});
-    const [{selectedHere}, setState] = useState({
-        selectedHere: false,
-    });
-    if (selectedHere
-        && (selected === null
-            || (selected.x !== x || selected.y !== y))) {
-        setState({
-            selectedHere: false,
-        });
-    }
+    let canPut = ensureCanPut(rev.stones, {x, y}, rev.nextPlayer.color);
+
+    const selectedHere = (turning !== null
+            && turning.putting.x === x
+            && turning.putting.y === y);
+
     const style = {
         left: x * 60, top: y * 60
     };
     const onClick = () => {
-        if (stone === Stone.None) {
-            if (selectedHere) {
-                const pos = {x, y};
-                rev.setStoneAt(pos);
-                setState({ selectedHere: false });
-                playMoved();
-            } else {
-                const pos = {x, y};
-                if (rev.validateAt(pos)) {
-                    setState({
-                        selectedHere: true
-                    });
-                    cellesChanged(pos);
+        if (rev.nextPlayer.ai === null) {
+            if (stone === Stone.None) {
+                if (selectedHere) {
+                    const pos = {x, y};
+                    let revNext = putStoneAt(rev, pos);
+                    onChanged(revNext, null);
+                } else {
+                    const pos = {x, y};
+                    if (ensureCanPut(rev.stones, pos, rev.nextPlayer.color)) {
+                        const nextTurning = findHolded(rev.stones, pos, rev.nextPlayer.color);
+                        onChanged(rev, nextTurning);
+                    }
                 }
             }
         }
@@ -70,7 +64,7 @@ function Cell(props :CellProps) {
             className='Cell'
             style={style}
             onClick={onClick}>
-            <div className={stoneCssClass(canPut, selectedHere, stone, rev.nextPlayer, rev.hintOn, isTurning)}/>
+            <div className={stoneCssClass(canPut, selectedHere, stone, rev.nextPlayer!.color, rev.hintOn, isTurning)}/>
         </div>
     );
 }

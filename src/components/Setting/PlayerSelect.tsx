@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 
 import { AI } from '../../rev';
-import { y5y, generateAi } from '../../algorithm';
+import { y5y, generateAi, generateSbpAi } from '../../algorithm';
 
 export const playerCandidate :{ [name: string]: AI|null} = {
     '人': null,
 };
-[y5y, generateAi(2, 'rabbit'), generateAi(3, 'donkey')].forEach((ai :AI) => {
+[y5y, generateAi(2, 'rabbit'), generateAi(3, 'donkey'), generateSbpAi(1, 'sheep'), generateSbpAi(2, 'bear'), generateSbpAi(3, 'wolf')].forEach((ai :AI) => {
     playerCandidate[ai._title] = ai;
 });
 

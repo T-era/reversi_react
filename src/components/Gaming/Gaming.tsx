@@ -21,7 +21,7 @@ function Gaming(props :Props) {
 
   // 次がAIの場合
   setTimeout(() => {
-    requestThink(rev.nextPlayer, rev, (nextRev) => {
+    requestThink(rev, (nextRev) => {
       setState({ rev: nextRev, turning: null });
     })
   }, 0);

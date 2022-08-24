@@ -1,7 +1,6 @@
-import Rev, { Pos, Stone } from '../../rev';
+import Rev, { Pos, Stone, AI } from '../../rev';
 import { flatten } from '../../ArrayUtil';
-import { AI } from '..';
-import { ensureCanPut, PlayerColor, putStoneAt, putStoneAt2 } from '../../rev/Rev';
+import { ensureCanPut, PlayerColor, putStoneAt2 } from '../../rev';
 
 // 目の前のn手で、とにかく沢山の石を取りたがる
 // TODO パスと選択不能の表現分け

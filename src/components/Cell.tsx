@@ -1,8 +1,6 @@
 import React from 'react';
 
-import Rev, { Stone, Turning, ensureCanPut, putStoneAt } from '../rev';
-import { findHolded } from '../rev/Rev';
-
+import Rev, { Stone, Turning, ensureCanPut, putStoneAt, findHolded, isInputWaiting } from '../rev';
 
 interface CellProps {
     rev :Rev;
@@ -43,7 +41,7 @@ function Cell(props :CellProps) {
         left: x * 60, top: y * 60
     };
     const onClick = () => {
-        if (rev.nextPlayer.ai === null) {
+        if (isInputWaiting(rev)) {
             if (stone === Stone.None) {
                 if (selectedHere) {
                     const pos = {x, y};

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
-import { AI, y5y, generateAi } from '../../algorithm';
+import { AI } from '../../rev';
+import { y5y, generateAi } from '../../algorithm';
 
 export const playerCandidate :{ [name: string]: AI|null} = {
     '人': null,

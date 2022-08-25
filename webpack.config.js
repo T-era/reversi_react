@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyFilePlugin = require("copy-webpack-plugin");
+const InlineSourceWebpackPlugin = require('inline-source-webpack-plugin');
 
 const PUBLIC_URL = '/rev';
 const OUTPUT_DIR = `${__dirname}/rev`;
@@ -53,7 +54,7 @@ module.exports = {
       templateParameters: {
         PUBLIC_URL: PUBLIC_URL,
       },
-      }),
+    }),
     new MiniCssExtractPlugin(),
     new CopyFilePlugin({
       patterns: [{
@@ -63,7 +64,12 @@ module.exports = {
         from: "public/manifest.json",
         to: OUTPUT_DIR
       }]
-    })  
+    }),
+    new InlineSourceWebpackPlugin({
+      compress: true,
+      rootpath: './src',
+      noAssetMatch: 'warn'
+    }),
   ],
   // import 文で .ts や .tsx ファイルを解決するため
   resolve: {
